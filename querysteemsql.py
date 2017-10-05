@@ -11,7 +11,7 @@ import re
 
 
 website_data_path = "/home/path to home directory"
-
+search_string = "photography"
 
 
 print("Connecting to Steemsql")
@@ -33,7 +33,7 @@ FROM    Comments (NOLOCK)
 WHERE        depth = 0
    and ISJSON(json_metadata) > 0
    and (
-		JSON_QUERY(json_metadata, '$.tags') like '%"""+"photography"+"""%'
+		JSON_QUERY(json_metadata, '$.tags') like '%"""+search_string+"""%'
 	)
 ORDER BY    created DESC
 """
@@ -54,7 +54,7 @@ for i in range(0,output.__len__()):
     ## For some tags the SQL query above matches more than just the individual tag
     ## so here we perform a secondary search for the tag
     ## most relevant for short tags that contain sequences of letters that would appear in other words
-    if "photography" in json.loads(output[i][1])['tags']:
+    if search_string in json.loads(output[i][1])['tags']:
          data.append(output[i][0])
 
 with open(output_file, 'w') as outfile:
